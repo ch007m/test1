@@ -1,0 +1,29 @@
+apiVersion: tekton.dev/v1
+kind: PipelineRun
+metadata:
+  name: quarkus-maven-build
+spec:
+  pipelineRef:
+    name: quarkus-maven-build
+  params:
+    - name: dockerfile
+      value: ./Dockerfile
+    - name: output-image
+      value: quay.io/ch007m/my-quarkus-app
+    - name: url
+      value: https://github.com/ch007m/test1.git
+    - name: native
+      value: false
+  workspaces:
+    - name: project-dir
+      persistentVolumeClaim:
+        claimName: project-pvc
+    - name: maven-m2-repo
+      persistentVolumeClaim:
+        claimName: m2-repo-pvc
+    - name: maven-settings
+      configMap:
+        name: maven-settings
+    #- name: dockerconfig-ws
+    #  secret:
+    #    secretName: dockerconfig-secret
